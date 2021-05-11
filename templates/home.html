@@ -28,6 +28,7 @@
 <script>
 
     $(document).ready(function(){
+        // Right after the page is loaded, we get the stock data (default to AAPL) from the Django backend (the 'get_stock_data' function) for plotting
         $.ajax({
               type: "POST",
               url: "/get_stock_data/",
@@ -123,6 +124,7 @@
     });
 
     $('#submit-btn').click(function() {
+        // when the user specifies a new ticker, we call the Django backend (the 'get_stock_data' function) to get the stock data and refresh the graph. 
         var tickerText = $('#ticker-input').val();
         $.ajax({
               type: "POST",
