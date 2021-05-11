@@ -488,7 +488,7 @@ The `$('#submit-btn').click(function(){...}` code block specifies the page behav
 - The three lists above are then all truncated into a size of 500 elements (i.e., data for the trailing 500 trading days) to be visualized by Chart.js. Specifically, the values in `dates` are used for the X axis; values in `daily_adjusted_close` and `sma_data` are used for the Y axis. 
 
 
-As you can see, the `get_stock_data` backend function is now the only missing piece in the frontend-backend communication loop. Please hold your breath - we will implement it right away! 
+As you can see, the `get_stock_data` backend function is now the only missing piece in the frontend-backend communication loop. We will implement it right away! 
 
 ## Create backend logic (views.py)
 
