@@ -10,7 +10,7 @@ Table of content:
 - Set up Django URL routing
 - Run the web application locally
 
-## Install Dependencies and set up project
+## Install dependencies and set up project
 We recommend **Python 3.6 or higher**. If you do not yet have Python installed, please follow the download instructions on the official [python.org](https://www.python.org/downloads/) website. 
 
 Once you have Python installed in your environment, please use your command line interface to install the following 2 Python libraries: 
@@ -19,7 +19,7 @@ Once you have Python installed in your environment, please use your command line
 
 The `pip` installer above should already be automatically included in your system if you are using Python 3.6 or higher downloaded from python.org. If you are seeing a "pip not found" error message, please refer to the [pip installation guide](https://pip.pypa.io/en/stable/installing/). 
 
-If you haven't done so, please obtain a free Alpha Vantage API key [here](https://www.alphavantage.co/support/#api-key). You will use this API key to query financial market data from the Alpha Vantage APIs as you develop this Python/Django website. 
+Please also obtain a free Alpha Vantage API key [here](https://www.alphavantage.co/support/#api-key). You will use this API key to query financial market data from the Alpha Vantage APIs as you develop this stock visualization web application. 
 
 Now, we are ready to create the Django project! 
 
@@ -481,13 +481,12 @@ The `$('#submit-btn').click(function(){...}` code block specifies the page behav
 - The three lists above are then all truncated into a size of 500 elements (i.e., data for the trailing 500 trading days) to be visualized by Chart.js. Specifically, the values in `dates` are used for the X axis; values in `daily_adjusted_close` and `sma_data` are used for the Y axis. 
 
 
-As you can see, the `get_stock_data` backend function is now the only missing piece in the frontend-backend interactions. Please hold your breath - we will implement it right away! 
+As you can see, the `get_stock_data` backend function is now the only missing piece in the frontend-backend communication loop. Please hold your breath - we will implement it right away! 
 
 ## Set up Django backend (views.py)
 
+Now, let's update `views.py` to the following. Don't forget to replace the `my_alphav_api_key` string with your actual Alpha Vantage API key. 
 
-
-views.py
 ```python
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -506,13 +505,14 @@ DATABASE_ACCESS = True
 #if False, the app will always query the Alpha Vantage APIs regardless of whether the stock data for a given ticker is already in the local database
 
 
-# Create your views here.
+#view function for rendering home.html
 def home(request):
     return render(request, 'home.html', {})
 
 @csrf_exempt
 def get_stock_data(request):
     if request.is_ajax():
+        #get ticker from the AJAX POST request
         ticker = request.POST.get('ticker', 'null')
         ticker = ticker.upper()
 
@@ -524,15 +524,14 @@ def get_stock_data(request):
                 return HttpResponse(entry.data, content_type='application/json')
 
         #obtain stock data from Alpha Vantage APIs
-        output_dictionary = {}
-        
         #get adjusted close data
         price_series = requests.get(f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={ticker}&apikey={APIKEY}&outputsize=full').json()
         
         #get SMA (simple moving average) data
         sma_series = requests.get(f'https://www.alphavantage.co/query?function=SMA&symbol={ticker}&interval=daily&time_period=10&series_type=close&apikey={APIKEY}').json()
 
-        #package up the data as a dictionary 
+        #package up the data in an output dictionary 
+        output_dictionary = {}
         output_dictionary['prices'] = price_series
         output_dictionary['sma'] = sma_series
 
@@ -549,8 +548,118 @@ def get_stock_data(request):
 
 ```
 
+Let's look at the above backend code a bit closer. 
+
+The function `def home(request):` is the standard way for a Django backend to render an HTML file (in our case, home.html). 
+
+The function `def get_stock_data(request):` takes an AJAX POST request from the home.html file and returns a JSON dictionary of stock data back to the AJAX loop. Let's unpack it here: 
+- `if request.is_ajax()` makes sure the request is indeed an AJAX POST request from the frontend. 
+- `ticker = request.POST.get('ticker', 'null')` obtains the ticker string from the AJAX request. The ticker string is always AAPL when the page is first loaded, but will change to other strings based on user input at the frontend. 
+- The code block under `DATABASE_ACCESS == True` checks if the data for a given ticker already exists in our local database. If yes, the `get_stock_data` function will simply get the data from the database and return it back to the AJAX loop. If not, the script continues to the next steps. (If you are familiar with SQL, the code `StockData.objects.filter(symbol=ticker)` is Django's way of saying `SELECT * FROM StockData WHERE symbol = ticker`.)
+- The part `price_series = requests.get(f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={ticker}&apikey={APIKEY}&outputsize=full').json()` queries Alpha Vantage's Daily Adjusted API and parse the data into a JSON dictionary through the `.json()` routine. Below is a sample JSON output from the daily adjusted API: 
+
+```
+{
+    "Meta Data": {
+        "1. Information": "Daily Time Series with Splits and Dividend Events",
+        "2. Symbol": "AAPL",
+        "3. Last Refreshed": "2021-05-10",
+        "4. Output Size": "Full size",
+        "5. Time Zone": "US/Eastern"
+    },
+    "Time Series (Daily)": {
+        "2021-05-10": {
+            "1. open": "129.41",
+            "2. high": "129.54",
+            "3. low": "126.81",
+            "4. close": "126.85",
+            "5. adjusted close": "126.85",
+            "6. volume": "88071229",
+            "7. dividend amount": "0.0000",
+            "8. split coefficient": "1.0"
+        },
+        "2021-05-07": {
+            "1. open": "130.85",
+            "2. high": "131.2582",
+            "3. low": "129.475",
+            "4. close": "130.21",
+            "5. adjusted close": "130.21",
+            "6. volume": "78973273",
+            "7. dividend amount": "0.2200",
+            "8. split coefficient": "1.0"
+        },
+        "2021-05-06": {
+            "1. open": "127.89",
+            "2. high": "129.75",
+            "3. low": "127.13",
+            "4. close": "129.74",
+            "5. adjusted close": "129.521163843",
+            "6. volume": "78128334",
+            "7. dividend amount": "0.0000",
+            "8. split coefficient": "1.0"
+        },
+        ...
+    }
+}
+```
+
+Please note that we are primarily interested the adjusted close field (`5. adjusted close`) of Alpha Vantage's daily adjusted API to remove any artificial price turbulences due to stock splits and dividend payout events. It is generally considered an [industry best practice](http://www.crsp.org/products/documentation/crsp-calculations) to use split/dividend-adjusted prices instead of raw close prices (`4. close`) to model stock price movements.
+
+
+- The part `sma_series = requests.get(f'https://www.alphavantage.co/query?function=SMA&symbol={ticker}&interval=daily&time_period=10&series_type=close&apikey={APIKEY}').json()` queries Alpha Vantage's Simple Moving Average (SMA) API and parse the data into a JSON dictionary through the `.json()` routine. Below is a sample JSON output from the SMA API: 
+
+```
+{
+    "Meta Data": {
+        "1: Symbol": "AAPL",
+        "2: Indicator": "Simple Moving Average (SMA)",
+        "3: Last Refreshed": "2021-05-10",
+        "4: Interval": "daily",
+        "5: Time Period": 10,
+        "6: Series Type": "close",
+        "7: Time Zone": "US/Eastern"
+    },
+    "Technical Analysis: SMA": {
+        "2021-05-10": {
+            "SMA": "130.6427"
+        },
+        "2021-05-07": {
+            "SMA": "131.4070"
+        },
+        "2021-05-06": {
+            "SMA": "131.7953"
+        },
+        "2021-05-05": {
+            "SMA": "132.0150"
+        },
+        ...
+     }
+}
+```
+The remainder of the `get_stock_data` function (reproduced below) packages up the adjusted close JSON data and the simple moving average JSON data into a single dictionary `output_dictionary`, which is then saved to the database (so that we can simply recycle the data from the database next time without querying the Alpha Vantage APIs again) and returned back to the AJAX POST loop (via `HttpResponse(json.dumps(output_dictionary), content_type='application/json')`) for charting at the frontend. 
+
+```
+#package up the data as a dictionary 
+output_dictionary['prices'] = price_series
+output_dictionary['sma'] = sma_series
+
+#save the dictionary to database
+temp = StockData(symbol=ticker, data=json.dumps(output_dictionary))
+temp.save()
+
+#return the data back to the frontend AJAX call 
+return HttpResponse(json.dumps(output_dictionary), content_type='application/json')
+```
+
+That's pretty much it! We have implemented both the frontend (home.html) and the backend (views.py) so that they can "talk" to each other seamlessly and perform read/write actions with the database. 
+
+
+
 ## URL routing
-urls.py
+Just one last thing: let's update `urls.py` with the latest URL routings - specifically:
+- `path("", stockVisualizer.views.home)` makes sure the `home` function in `views.py` will be called when a user visits the homepage in their web browser
+- `path('get_stock_data/', stockVisualizer.views.get_stock_data)` makes sure the `get_stock_data` function in `views.py` will be called when home.html makes an AJAX POST request to the `/get_stock_data/` URL. 
+
 ```python
 from django.contrib import admin
 from django.urls import path
@@ -564,12 +673,14 @@ urlpatterns = [
 ```
 
 ## Running the website locally
+Now we are ready to run the website in the local environment. 
+
+Enter the following prompt in your command line window (please make sure you are still in the `alphaVantage` root directory): 
 ```shell
 (alphaVantage) $ python manage.py runserver
 ```
 
-
-You should have a fully functional Django web application at http://localhost:8000/
+If you go to http://localhost:8000/ in your web browser (e.g., Chrome, Firefox, etc.), you should see the website in full action! 
 
 ## References
 
