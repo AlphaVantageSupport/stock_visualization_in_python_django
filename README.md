@@ -1,14 +1,21 @@
 # Building a Stock Visualization Website with Python/Django and Alpha Vantage APIs
 
+Data visualization is becoming a must-have feature for more and more web and mobile applications. This trend is even more salient for financial market data, where data visualizations is often used for market analysis, technical charting, among other business scenarios. 
+
+In this project, we will create an interactive stock visualization website (screenshot below) with Python/Django and Alpha Vantage APIs. We will cover key software engineering and web development concepts such as AJAX, server-side scripting, and database models - in fewer than 400 lines of code. 
+
 ![homepage mockup](homepage_layout.png)
 
-Table of content:
+The project is comprised of the following sections: 
 - Install dependencies and set up project
 - Create database model
-- Create frontend UI for the homepage
+- Create frontend UI
 - Create backend logic
 - Set up Django URL routing
 - Run the web application locally
+
+To minimize your cognitive load, we have included all the necessary code scripts and command line prompts directly in this document. By the time you finish this tutorial, you will have a stock data visualization website with frontend, backend, and database all ready for prime time. Let's get started! 
+
 
 ## Install dependencies and set up project
 We recommend **Python 3.6 or higher**. If you do not yet have Python installed, please follow the download instructions on the official [python.org](https://www.python.org/downloads/) website. 
@@ -207,7 +214,7 @@ At this stage, there are only two major steps left:
 
 Let's proceed! 
 
-## Set up the homepage 
+## Create frontend UI 
 
 Before we dive into the code implementation, let's first summarize the expected behavior of our homepage (screenshots below) at a high level: 
 - Upon loading, the page will display the adjusted close prices and simple moving average (SMA) values of Apple (AAPL), covering the most recent 500 trading days. 
@@ -483,7 +490,7 @@ The `$('#submit-btn').click(function(){...}` code block specifies the page behav
 
 As you can see, the `get_stock_data` backend function is now the only missing piece in the frontend-backend communication loop. Please hold your breath - we will implement it right away! 
 
-## Set up Django backend (views.py)
+## Create backend logic (views.py)
 
 Now, let's update `views.py` to the following. Don't forget to replace the `my_alphav_api_key` string with your actual Alpha Vantage API key. 
 
