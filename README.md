@@ -63,11 +63,11 @@ Step 2: go to the "templates" folder
 
 Step 3: create an empty `home.html` file in the `templates` folder
 
-If you are in Mac or Linux:  
+If you are using Mac or Linux:  
 ```shell
 (templates) $ touch home.html
 ```
-If you are in Windows:  
+If you are using Windows:  
 ```shell
 (templates) $ type nul > home.html
 ```
