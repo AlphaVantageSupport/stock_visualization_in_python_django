@@ -2,60 +2,76 @@
 
 ![homepage mockup](homepage_layout.png)
 
-## Installing Dependencies 
-This web application has been tested on Python 3.6 or higher. 
+Table of content:
+- Install dependencies and set up project
+- Create database model
+- Create frontend UI for the homepage
+- Create backend logic
+- Set up Django URL routing
+- Run the web application locally
 
-Dependencies: 
-- Django: `pip install django`
-- requests: `pip install requests`
+## Install Dependencies and set up project
+We recommend **Python 3.6 or higher**. If you do not yet have Python installed, please follow the download instructions on the official [python.org](https://www.python.org/downloads/) website. 
 
-Alpha Vantage API key
+Once you have Python installed in your environment, please use your command line interface to install the following 2 Python libraries: 
+- [Django](https://www.djangoproject.com/download/): `pip install django`
+- [requests](https://pypi.org/project/requests/): `pip install requests`
 
+The `pip` installer above should already be automatically included in your system if you are using Python 3.6 or higher downloaded from python.org. If you are seeing a "pip not found" error message, please refer to the [pip installation guide](https://pip.pypa.io/en/stable/installing/). 
 
-Command line
+If you haven't done so, please obtain a free Alpha Vantage API key [here](https://www.alphavantage.co/support/#api-key). You will use this API key to query financial market data from the Alpha Vantage APIs as you develop this Python/Django website. 
+
+Now, we are ready to create the Django project! 
+
+Open a new command line window and type in the following prompt: 
 ```shell
 (home) $ django-admin startproject alphaVantage
 ```
 
-folder structure: 
-```
-alphaVantage/
-    alphaVantage/
-        __init__.py
-        asgi.py
-        settings.py
-        urls.py
-        wsgi.py
-    manage.py
-```
+You have just created a blank Django project in a folder called `alphaVantage`. 
 
-Go from your home directory to the project directory
+Now, let's switch from your home directory to the `alphaVantage` project directory with the following command line prompt: 
 ```shell
 (home) $ cd alphaVantage
 ```
 
-create the stock visualizer app: 
+For the rest of this project, we will be operating inside the `alphaVantage` root directory. 
+
+Now, let's create a `stockVisualizer` app within the blank Django project:  
 ```shell
 (alphaVantage) $ python manage.py startapp stockVisualizer
 ```
 
-create the HTML file for our homepage: 
+We will also create an HTML file for our homepage. Enter the following 4 command line prompts in order: 
+
+Step 1: create a new folder called "templates"
 ```shell
 (alphaVantage) $ mkdir templates
 ```
+
+Step 2: go to that folder
 ```shell
 (alphaVantage) $ cd templates
 ```
+
+Step 3: create a new `home.html` file in the `templates` folder
+
+If you are in Mac or Linux:  
 ```shell
 (templates) $ touch home.html
 ```
+If you are in Windows:  
+```shell
+(templates) $ type nul > home.html
+```
+
+Step 4: return to our `alphaVantage` root directory
 ```shell
 (templates) $ cd ../
 ``` 
 
-Empty home.html
+At this stage, the file structure of your Django project should look similar to the one below. You may want to import the project into an IDE such as PyCharm, Visual Studio Code, or Sublime Text to visualize the file structure more easily. 
 
-folder structure: 
 ```
 alphaVantage/
     alphaVantage/
@@ -78,6 +94,11 @@ alphaVantage/
     manage.py
 ```
 
+
+
+
+
+## Specify the database model
 Update settings.py (CNS)
 at the top of the script:
 ```python
@@ -118,9 +139,6 @@ TEMPLATES = [
 ```
 
 
-
-
-## Specify the database model
 ```python
 #models.py
 
