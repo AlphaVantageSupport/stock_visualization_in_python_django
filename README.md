@@ -54,7 +54,7 @@ Step 2: go to that folder
 (alphaVantage) $ cd templates
 ```
 
-Step 3: create a new `home.html` file in the `templates` folder
+Step 3: create an empty `home.html` file in the `templates` folder
 
 If you are in Mac or Linux:  
 ```shell
@@ -94,7 +94,14 @@ alphaVantage/
     manage.py
 ```
 
-
+Let's take a closer look at some of the important files: 
+- `manage.py`: A command-line utility that lets you interact with this Django project in various ways. You can read all the details about manage.py in [django-admin and manage.py](https://docs.djangoproject.com/en/3.2/ref/django-admin/).
+- `__init__.py`: An empty file that tells Python that this directory should be considered a Python package. Please keep it empty! 
+- `settings.py`: Settings/configuration for this Django project.
+- `urls.py`: The URL declarations for this Django project; a “table of contents” of your Django-powered site. 
+- `models.py`: this is the file you will use to define database objects and schema
+- `views.py`: this is where all the backend logic gets implemented and relayed to the frontend (views)
+- `home.html`: the HTML file that determines the look and behavior of the homepage
 
 
 
