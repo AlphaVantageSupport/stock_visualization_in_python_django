@@ -683,6 +683,11 @@ Enter the following prompt in your command line window (please make sure you are
 If you go to http://localhost:8000/ in your web browser (e.g., Chrome, Firefox, etc.), you should see the website in full action! 
 
 ## References
+Source code: [link](https://github.com/AlphaVantageSupport/stock_visualization_in_python_django)
+
+Food for thought #1: refining the visualization 
+
+Food for thought #2: making the database more robust 
 
 
 
