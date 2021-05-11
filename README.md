@@ -1,6 +1,6 @@
 # Building a Stock Visualization Website with Python/Django and Alpha Vantage APIs
 
-Data visualization is becoming a must-have feature for more and more web and mobile applications. This trend is even more salient for financial market data, where data visualizations is often used for market analysis, technical charting, among other business scenarios. 
+Data visualization is becoming a must-have feature for more and more web and mobile applications. This trend is even more salient for financial market data, where data visualization is often used for market analysis, technical charting, among other business scenarios. 
 
 In this project, we will create an interactive stock visualization website (screenshot below) with Python/Django and Alpha Vantage APIs. We will cover key software engineering and web development concepts such as AJAX, server-side scripting, and database models - in fewer than 400 lines of code. 
 
