@@ -209,7 +209,9 @@ Let's proceed!
 
 ## Set up the homepage 
 
-
+Before we dive into the code implementation, let's first summarize the expected behavior of our homepage (screenshot below) at a high level: 
+- Upon loading, the page will plot the adjusted close prices and simple moving average (SMA) values of AAPL, covering the most recent 500 trading days. 
+- When the user enters a new stock ticker in the textbox and hit "submit", the existing chart on the page will be replaced with the information from the new ticker
 
 ![homepage mockup](homepage_layout.png)
 
