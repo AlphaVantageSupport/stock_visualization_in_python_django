@@ -174,7 +174,7 @@ With `models.py` updated, let's notify Django about the newly created database m
 (alphaVantage) $ python manage.py migrate
 ```
 
-At this stage, your file structure should loook similar to the one below: 
+At this stage, your file structure should look similar to the one below: 
 ```
 alphaVantage/
     alphaVantage/
