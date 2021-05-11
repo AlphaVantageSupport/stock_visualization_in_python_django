@@ -457,7 +457,9 @@ urlpatterns = [
 ```
 
 ## Running the website locally
-`(alphaVantage) $ python manage.py runserver`
+```shell
+(alphaVantage) $ python manage.py runserver
+```
 
 
 You should have a fully functional Django web application at http://localhost:8000/
