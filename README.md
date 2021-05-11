@@ -14,21 +14,22 @@ Command line
 ```shell
 (home) $ django-admin startproject alphaVantage
 ```
-then
-```shell
-$ cd alphaVantage
-```
 
 folder structure: 
 ```
 alphaVantage/
-  alphaVantage/
-    __init__.py
-    asgi.py
-    settings.py
-    urls.py
-    wsgi.py
-  manage.py
+    alphaVantage/
+        __init__.py
+        asgi.py
+        settings.py
+        urls.py
+        wsgi.py
+    manage.py
+```
+
+Go from your home directory to the project directory
+```shell
+(home) $ cd alphaVantage
 ```
 
 create the stock visualizer app: 
@@ -55,24 +56,24 @@ Empty home.html
 folder structure: 
 ```
 alphaVantage/
-  alphaVantage/
-    __init__.py
-    asgi.py
-    settings.py
-    urls.py
-    wsgi.py
-  stockVisualizer/
-    migrations/
-      __init__.py
-    __init__.py
-    admin.py
-    apps.py
-    models.py
-    tests.py
-    views.py
-  templates/
-    home.html
-  manage.py
+    alphaVantage/
+        __init__.py
+        asgi.py
+        settings.py
+        urls.py
+        wsgi.py
+    stockVisualizer/
+        migrations/
+            __init__.py
+        __init__.py
+        admin.py
+        apps.py
+        models.py
+        tests.py
+        views.py
+    templates/
+        home.html
+    manage.py
 ```
 
 Update settings.py (CNS)
@@ -140,26 +141,26 @@ Register the data model to the database
 Folder structure: 
 ```
 alphaVantage/
-  alphaVantage/
-    __init__.py
-    asgi.py
-    settings.py
-    urls.py
-    wsgi.py
-  stockVisualizer/
-    migrations/
-      0001_initial.py #you should see this after running the database migration commands
-      __init__.py
-    __init__.py
-    admin.py
-    apps.py
-    models.py
-    tests.py
-    views.py
-  templates/
-    home.html
-  manage.py
-  db.sqlite3 #you should see this after running the database migration commands
+    alphaVantage/
+        __init__.py
+        asgi.py
+        settings.py
+        urls.py
+        wsgi.py
+    stockVisualizer/
+        migrations/
+            0001_initial.py #you should see this after running the database migration commands
+            __init__.py
+        __init__.py
+        admin.py
+        apps.py
+        models.py
+        tests.py
+        views.py
+    templates/
+        home.html
+    manage.py
+    db.sqlite3 #you should see this after running the database migration commands
 ```
 
 ## Set up the homepage 
