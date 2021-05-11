@@ -20,7 +20,7 @@ To minimize your cognitive load, we have included all the necessary code scripts
 ## Install dependencies and set up project
 We recommend **Python 3.6 or higher**. If you do not yet have Python installed, please follow the download instructions on the official [python.org](https://www.python.org/downloads/) website. 
 
-Once you have Python installed in your environment, please use your command line interface to install the following 2 Python libraries: 
+Once you have Python installed in your environment, please use your command line interface to install the following Python libraries: 
 - [Django](https://www.djangoproject.com/download/): `pip install django`
 - [requests](https://pypi.org/project/requests/): `pip install requests`
 
