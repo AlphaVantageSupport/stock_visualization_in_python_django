@@ -56,7 +56,7 @@ Step 1: create a new folder called "templates"
 (alphaVantage) $ mkdir templates
 ```
 
-Step 2: go to that folder
+Step 2: go to the "templates" folder
 ```shell
 (alphaVantage) $ cd templates
 ```
@@ -77,7 +77,7 @@ Step 4: return to our `alphaVantage` root directory
 (templates) $ cd ../
 ``` 
 
-At this stage, the file structure of your Django project should look similar to the one below. You may want to import the project into an IDE such as PyCharm, Visual Studio Code, or Sublime Text to visualize the file structure more easily. 
+At this stage, the file structure of your Django project should look similar to the one below. You may want to import the project into an IDE such as PyCharm, Visual Studio, or Sublime Text to visualize the file structure more easily. 
 
 ```
 alphaVantage/
@@ -118,7 +118,7 @@ Databases are essential components of most modern web and mobile applications. F
 Before we create the database model, however, let's open the `settings.py` file and quickly modify the following 3 places in the script: 
 
 
-1. Near the top of `settings.py`, add a line of code `import os`: 
+1. Near the top of `settings.py`, add `import os`: 
 ```python
 from pathlib import Path
 import os #add this line to settings.py
@@ -208,7 +208,7 @@ alphaVantage/
 
 The `db.sqlite3` file indicates that we have registered our `StockData` model in the local SQLite database. As its name suggests, SQLite is a lightweight SQL database frequently used for web development (especially in local test environment). SQLite is automatically included in Django/Python, so there is no need to install it separately :-) 
 
-At this stage, there are only two major steps left:
+There are now only two major steps left:
 - Set up the homepage file (home.html) so that we can visualize stock prices and moving averagas of a given stock
 - Create the backend logic (views.py) so that we have the proper stock data to feed into the frontend UI
 
@@ -220,14 +220,16 @@ Before we dive into the code implementation, let's first summarize the expected 
 - Upon loading, the page will display the adjusted close prices and simple moving average (SMA) values of Apple (AAPL), covering the most recent 500 trading days. 
 - When the user enters a new stock ticker in the textbox and hits "submit", the existing chart on the page will be replaced with the adjusted close and SMA data of the new ticker.
 
-(When the homepage is first loaded)
+**When the homepage is first loaded**
 ![homepage mockup](homepage_layout.png)
 
-(When the user enters a new symbol such as GME)
+**When the user enters a new symbol (such as GME)**
 ![homepage update_mockup](homepage_gme.png)
 
 
-With the above page layout and behavior in mind, let's implement the homepage frontend accordingly. Open the (empty) `home.html` and paste the following content into it: 
+With the above page layout and behavior defined, let's implement the homepage frontend accordingly. 
+
+Open the (empty) `home.html` and paste the following content into it: 
 ```html
 <!DOCTYPE html>
 <html>
