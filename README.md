@@ -94,7 +94,7 @@ alphaVantage/
     manage.py
 ```
 
-Let's take a closer look at some of the important files: 
+Let's take a closer look at some of the key files: 
 - `manage.py`: A command-line utility that lets you interact with this Django project in various ways. You can read all the details about manage.py in [django-admin and manage.py](https://docs.djangoproject.com/en/3.2/ref/django-admin/).
 - `__init__.py`: An empty file that tells Python that this directory should be considered a Python package. Please keep it empty! 
 - `settings.py`: Settings/configuration for this Django project.
@@ -106,14 +106,18 @@ Let's take a closer look at some of the important files:
 
 
 ## Specify the database model
-Update settings.py (CNS)
-at the top of the script:
+Databases are essential components of most modern web and mobile applications. For our stock visualization website, we will create a simple (two-column) database model to store stock market data. 
+
+Before we create the database model, however, let's open the `settings.py` file and quickly modify the following 3 places in the script: 
+
+
+1. Near the top of `settings.py`, add a line of code `import os`: 
 ```python
 from pathlib import Path
-import os #add this line
+import os #add this line to settings.py
 ```
 
-Inside the `INSTALLED_APPS`
+2. Inside the `INSTALLED_APPS`, add the `stockVisualizer` app: 
 ```python
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -122,16 +126,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'stockVisualizer', #add this line
+    'stockVisualizer', #add this line to settings.py
 ]
 ```
 
-Inside `TEMPLATES`, register the template folder we just created
+3. Inside `TEMPLATES`, include the `templates` directory we've created earlier in this project: 
 ```python
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')], #modify this line
+        'DIRS': [os.path.join(BASE_DIR, 'templates')], #modify this line in settings.py
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -145,6 +149,11 @@ TEMPLATES = [
 ]
 ```
 
+Now, let's define a Django database model called `StockData` in `models.py`. 
+
+The model has two fields:
+- a `symbol` field that stores the ticker string of the stock
+- a `data` field that stores the historical prices and moving average values for a given ticker
 
 ```python
 #models.py
@@ -157,7 +166,7 @@ class StockData(models.Model):
     data = models.TextField(null=True)
 ```
 
-Register the data model to the database 
+With `models.py` updated, let's notify Django about the newly created database model via the following command line prompts: 
 ```shell
 (alphaVantage) $ python manage.py makemigrations
 ```
@@ -165,7 +174,7 @@ Register the data model to the database
 (alphaVantage) $ python manage.py migrate
 ```
 
-Folder structure: 
+At this stage, your file structure should loook similar to the one below: 
 ```
 alphaVantage/
     alphaVantage/
@@ -190,8 +199,21 @@ alphaVantage/
     db.sqlite3 #you should see this after running the database migration commands
 ```
 
+The `db.sqlite3` file indicates that we have registered our `StockData` model in the local SQLite database. As its name suggests, SQLite is a lightweight SQL database frequently used for developing web applications (especially in local test environment). SQLite is automatically included in Django/Python, so there is no need to install it separately :-) 
+
+At this stage, there are only two major steps left:
+- Set up the homepage file (home.html) so that we can visualize stock prices and moving averagas interactively
+- Create the backend logic (views.py) so that we have the right stock data to feed into the frontend UI
+
+Let's proceed! 
+
 ## Set up the homepage 
-home.html
+
+
+
+![homepage mockup](homepage_layout.png)
+
+Open the (empty) `home.html` and paste the following content into it: 
 ```html
 <!DOCTYPE html>
 <html>
@@ -424,6 +446,8 @@ home.html
 </body>
 </html>
 ```
+
+
 
 ## Set up Django backend
 views.py
