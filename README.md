@@ -202,20 +202,25 @@ alphaVantage/
 The `db.sqlite3` file indicates that we have registered our `StockData` model in the local SQLite database. As its name suggests, SQLite is a lightweight SQL database frequently used for developing web applications (especially in local test environment). SQLite is automatically included in Django/Python, so there is no need to install it separately :-) 
 
 At this stage, there are only two major steps left:
-- Set up the homepage file (home.html) so that we can visualize stock prices and moving averagas interactively
-- Create the backend logic (views.py) so that we have the right stock data to feed into the frontend UI
+- Set up the homepage file (home.html) so that we can visualize stock prices and moving averagas of a given stock
+- Create the backend logic (views.py) so that we have the proper stock data to feed into the frontend UI
 
 Let's proceed! 
 
 ## Set up the homepage 
 
-Before we dive into the code implementation, let's first summarize the expected behavior of our homepage (screenshot below) at a high level: 
-- Upon loading, the page will plot the adjusted close prices and simple moving average (SMA) values of AAPL, covering the most recent 500 trading days. 
-- When the user enters a new stock ticker in the textbox and hit "submit", the existing chart on the page will be replaced with the information from the new ticker
+Before we dive into the code implementation, let's first summarize the expected behavior of our homepage (screenshots below) at a high level: 
+- Upon loading, the page will display the adjusted close prices and simple moving average (SMA) values of Apple (AAPL), covering the most recent 500 trading days. 
+- When the user enters a new stock ticker in the textbox and hits "submit", the existing chart on the page will be replaced with the adjusted close and SMA data of the new ticker.
 
+(When the homepage is first loaded)
 ![homepage mockup](homepage_layout.png)
 
-Open the (empty) `home.html` and paste the following content into it: 
+(When the user enters a new symbol such as GME)
+![homepage update_mockup](homepage_gme.png)
+
+
+With the above page layout and behavior in mind, let's implement the homepage frontend accordingly. Open the (empty) `home.html` and paste the following content into it: 
 ```html
 <!DOCTYPE html>
 <html>
@@ -449,9 +454,39 @@ Open the (empty) `home.html` and paste the following content into it:
 </html>
 ```
 
+This is a chunky block of code! Don't worry - it basically completes the following 4 tasks: 
+
+1. Load the Javascript dependencies: 
+-  `<script src="https://cdn.jsdelivr.net/npm/chart.js@3.2.1/dist/chart.min.js"></script>` loads the powerful [Chart.js library](https://www.chartjs.org/) for data visualization 
+- `<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>` loads the [jquery library](https://jquery.com/) that streamlines common frontend development tasks. 
+
+2. Define the page layout
+- `<input type="text" id="ticker-input">` is the input text box for a user to enter a new stock ticker
+- `<input type="button" value="submit" id="submit-btn">` is the submit button
+- `<canvas id="myChart"></canvas>` is the canvas on which Chart.js will generate the beautiful graph for stock data visualization
+
+3. Define the behavior upon page loading
+
+The `$(document).ready(function(){...}` code block specifies the page behavior when it's first loaded:
+- First, it will make an AJAX POST request to a Django backend function called `get_stock_data` to get the price and simple moving average data for AAPL. AJAX stands for Asynchronous JavaScript And XML, which is a popular Javascript design pattern that enables you to (1) update a web page without reloading the page, (2) request data from a backend server - after the page has loaded, (3) receive data from a backend server - after the page has loaded, among other benefits. 
+- Once AAPL's data is returned by the backend to the frontend (the data is stored in the `res` variable of `success: function (res, status) {...}`), it is parsed by several lines of Javascript codes into three lists: `dates`, `daily_adjusted_close`, and `sma_data`. 
+- The three lists above are then all truncated into a size of 500 elements (i.e., data for the trailing 500 trading days) to be visualized by Chart.js. Specifically, the values in `dates` are used for the X axis; values in `daily_adjusted_close` and `sma_data` are used for the Y axis. 
 
 
-## Set up Django backend
+4. Define the behavior for when a new ticker is submitted by the user
+
+The `$('#submit-btn').click(function(){...}` code block specifies the page behavior when a user enters a new ticker symbol: 
+- First, it will make an AJAX POST request to a Django backend function called `get_stock_data` to get the price and simple moving average data for the ticker entered by the user. The line `var tickerText = $('#ticker-input').val();` takes care of extracting the ticker string from the input textbox. 
+- Once the ticker's data is returned by the backend to the frontend (the data is again stored in the `res` variable of `success: function (res, status) {...}`), it is parsed by several lines of Javascript codes into three lists: `dates`, `daily_adjusted_close`, and `sma_data`. 
+- The three lists above are then all truncated into a size of 500 elements (i.e., data for the trailing 500 trading days) to be visualized by Chart.js. Specifically, the values in `dates` are used for the X axis; values in `daily_adjusted_close` and `sma_data` are used for the Y axis. 
+
+
+You may be wondering where the `get_stock_data` backend function is. Please hold your breath - we will implement it right away! 
+
+## Set up Django backend (views.py)
+
+
+
 views.py
 ```python
 from django.shortcuts import render
@@ -484,20 +519,28 @@ def get_stock_data(request):
         if DATABASE_ACCESS == True:
             #checking if the database already has data stored for this ticker before querying the Alpha Vantage API
             if StockData.objects.filter(symbol=ticker).exists(): 
+                #We have the data in our database! Get the data from the database directly and send it back to the frontend AJAX call
                 entry = StockData.objects.filter(symbol=ticker)[0]
                 return HttpResponse(entry.data, content_type='application/json')
 
+        #obtain stock data from Alpha Vantage APIs
         output_dictionary = {}
-
+        
+        #get adjusted close data
         price_series = requests.get(f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={ticker}&apikey={APIKEY}&outputsize=full').json()
+        
+        #get SMA (simple moving average) data
         sma_series = requests.get(f'https://www.alphavantage.co/query?function=SMA&symbol={ticker}&interval=daily&time_period=10&series_type=close&apikey={APIKEY}').json()
 
+        #package up the data as a dictionary 
         output_dictionary['prices'] = price_series
         output_dictionary['sma'] = sma_series
 
+        #save the dictionary to database
         temp = StockData(symbol=ticker, data=json.dumps(output_dictionary))
         temp.save()
 
+        #return the data back to the frontend AJAX call 
         return HttpResponse(json.dumps(output_dictionary), content_type='application/json')
 
     else:
