@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--<link rel="stylesheet" href="style.css">-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.2.1/dist/chart.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Stock Visualizer</title>
+</head>
+
+<body>
+<h2>Interative Stock Visualizer</h2>
+<br>
+
+<label for="ticker-input">Enter Symbol:</label>
+<input type="text" id="ticker-input">
+<input type="button" value="submit" id="submit-btn">
+<br>
+
+<div id="graph-area" style="height:80%; width:80%;">
+<canvas id="myChart"></canvas>
+</div>
+<br>
+
+<div>
+    Friendly reminder: if the graphing function stops working after several successful instances, don't worry! It is likely that you have reached the 5 requests/minute rate limit of the free Alpha Vantage API key. The graph should work again in the next minute or after you obtain a <a href="https://www.alphavantage.co/premium/" target="_blank">premium API key</a> with a higher rate limit.
+</div>
+
+<script>
+
+    $(document).ready(function(){
+        $.ajax({
+              type: "POST",
+              url: "/get_stock_data/",
+              data: {
+                 'ticker': 'AAPL',
+              },
+              success: function (res, status) {
+                var tickerDisplay = res['prices']['Meta Data']['2. Symbol'];
+                var graphTitle = tickerDisplay + ' (data for the trailing 500 trading days)'
+
+                var priceSeries = res['prices']['Time Series (Daily)'];
+                var daily_adjusted_close = [];
+                var dates = [];
+
+                price_data_parse = function(){
+                    for (let key in priceSeries) {
+                        daily_adjusted_close.push(Number(priceSeries[key]['5. adjusted close']));
+                        dates.push(String(key));
+                    }
+
+                };
+                price_data_parse();
+
+                var smaSeries = res['sma']['Technical Analysis: SMA'];
+                var sma_data = [];
+
+                sma_data_parse = function(){
+                    for (let key in smaSeries) {
+                        sma_data.push(Number(smaSeries[key]['SMA']));
+                    }
+
+                };
+                sma_data_parse();
+
+
+
+                daily_adjusted_close.reverse().slice(500);
+                sma_data.reverse().slice(500);
+                dates.reverse().slice(500);
+
+                //make a graph
+                var ctx = document.getElementById('myChart').getContext('2d');
+                var myChart = new Chart(ctx, {
+                type: 'line',
+                    data: {
+                        labels: dates.slice(-500),
+                        datasets: [
+                            {
+                                label: 'Daily Adjusted Close',
+                                data: daily_adjusted_close.slice(-500),
+                                backgroundColor: [
+                                    'green',
+                                ],
+                                borderColor: [
+                                    'green',
+                                ],
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Simple Moving Average (SMA)',
+                                data: sma_data.slice(-500),
+                                backgroundColor: [
+                                    'blue',
+                                ],
+                                borderColor: [
+                                    'blue',
+                                ],
+                                borderWidth: 1
+                            },
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                //beginAtZero: false
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                            position: 'top',
+                            },
+                            title: {
+                            display: true,
+                            text: graphTitle
+                            }
+                        }
+                    }
+                });
+
+              }
+        });
+    });
+
+    $('#submit-btn').click(function() {
+        var tickerText = $('#ticker-input').val();
+        $.ajax({
+              type: "POST",
+              url: "/get_stock_data/",
+              data: {
+                 'ticker': tickerText,
+              },
+              success: function (res, status) {
+                var tickerDisplay = res['prices']['Meta Data']['2. Symbol'];
+                var graphTitle = tickerDisplay + ' (data for the trailing 500 trading days)'
+
+                var priceSeries = res['prices']['Time Series (Daily)'];
+                var daily_adjusted_close = [];
+                var dates = [];
+
+                price_data_parse = function(){
+                    for (let key in priceSeries) {
+                        daily_adjusted_close.push(Number(priceSeries[key]['5. adjusted close']));
+                        dates.push(String(key));
+                    }
+
+                };
+                price_data_parse();
+
+                var smaSeries = res['sma']['Technical Analysis: SMA'];
+                var sma_data = [];
+
+                sma_data_parse = function(){
+                    for (let key in smaSeries) {
+                        sma_data.push(Number(smaSeries[key]['SMA']));
+                    }
+
+                };
+                sma_data_parse();
+
+
+
+                daily_adjusted_close.reverse().slice(500);
+                sma_data.reverse().slice(500);
+                dates.reverse().slice(500);
+
+                //make a graph
+                $('#myChart').remove(); // this is my <canvas> element
+                $('#graph-area').append('<canvas id="myChart"><canvas>');
+                var ctx = document.getElementById('myChart').getContext('2d');
+                var myChart = new Chart(ctx, {
+                type: 'line',
+                    data: {
+                        labels: dates.slice(-500),
+                        datasets: [
+                            {
+                                label: 'Daily Adjusted Close',
+                                data: daily_adjusted_close.slice(-500),
+                                backgroundColor: [
+                                    'green',
+                                ],
+                                borderColor: [
+                                    'green',
+                                ],
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Simple Moving Average (SMA)',
+                                data: sma_data.slice(-500),
+                                backgroundColor: [
+                                    'blue',
+                                ],
+                                borderColor: [
+                                    'blue',
+                                ],
+                                borderWidth: 1
+                            },
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                //beginAtZero: false
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                            position: 'top',
+                            },
+                            title: {
+                            display: true,
+                            text: graphTitle
+                            }
+                        }
+                    }
+                });
+
+              }
+        });
+
+
+    });
+
+</script>
+
+</body>
+</html>
