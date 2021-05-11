@@ -11,9 +11,13 @@ Alpha Vantage API key
 
 
 Command line
-`(home) $ django-admin startproject alphaVantage`
+```shell
+(home) $ django-admin startproject alphaVantage
+```
 then
-`$ cd alphaVantage`
+```shell
+$ cd alphaVantage
+```
 
 folder structure: 
 ```
@@ -28,13 +32,23 @@ alphaVantage/
 ```
 
 create the stock visualizer app: 
-`(alphaVantage) $ python manage.py startapp stockVisualizer`
+```shell
+(alphaVantage) $ python manage.py startapp stockVisualizer
+```
 
 create the HTML file for our homepage: 
-`(alphaVantage) $ mkdir templates`
-`(alphaVantage) $ cd templates`
-`(templates) $ touch home.html`
-`(templates) $ cd ../` 
+```shell
+(alphaVantage) $ mkdir templates
+```
+```shell
+(alphaVantage) $ cd templates
+```
+```shell
+(templates) $ touch home.html
+```
+```shell
+(templates) $ cd ../
+``` 
 
 Empty home.html
 
@@ -116,8 +130,12 @@ class StockData(models.Model):
 ```
 
 Register the data model to the database 
-`(alphaVantage) $ python manage.py makemigrations`
-`(alphaVantage) $ python manage.py migrate`
+```shell
+(alphaVantage) $ python manage.py makemigrations
+```
+```shell
+(alphaVantage) $ python manage.py migrate
+```
 
 Folder structure: 
 ```
@@ -130,6 +148,7 @@ alphaVantage/
     wsgi.py
   stockVisualizer/
     migrations/
+      0001_initial.py #you should see this after running the database migration commands
       __init__.py
     __init__.py
     admin.py
