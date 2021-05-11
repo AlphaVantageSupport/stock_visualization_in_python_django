@@ -1,5 +1,7 @@
 # Building a Stock Visualization Website with Python/Django and Alpha Vantage APIs
 
+![homepage mockup](homepage_layout.png)
+
 ## Installing Dependencies 
 This web application has been tested on Python 3.6 or higher. 
 
