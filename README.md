@@ -24,7 +24,7 @@ Once you have Python installed in your environment, please use your command line
 - [Django](https://www.djangoproject.com/download/): `pip install django`
 - [requests](https://pypi.org/project/requests/): `pip install requests`
 
-The `pip` installer above should already be automatically included in your system if you are using Python 3.6 or higher downloaded from python.org. If you are seeing a "pip not found" error message, please refer to the [pip installation guide](https://pip.pypa.io/en/stable/installing/). 
+The `pip` installer above should already be included in your system if you are using Python 3.6 or higher downloaded from python.org. If you are seeing a "pip not found" error message, please refer to the [pip installation guide](https://pip.pypa.io/en/stable/installing/). 
 
 Please also obtain a free Alpha Vantage API key [here](https://www.alphavantage.co/support/#api-key). You will use this API key to query financial market data from the Alpha Vantage APIs as you develop this stock visualization web application. 
 
