@@ -700,10 +700,12 @@ If you go to http://localhost:8000/ in your web browser (e.g., Chrome, Firefox, 
 Source code: [link](https://github.com/AlphaVantageSupport/stock_visualization_in_python_django)
 
 **Food for thought #1: richer data visualization**
+
 The current web application supports the visualization of adjusted close prices and simple moving average (SMA) values for a given stock. We will leave it to your creativitiy to enrich the visualization. For example, how about plotting [cryptocurrency prices](https://www.alphavantage.co/documentation/#digital-currency) along with the stock prices? How about adding more [technical indicators](https://www.alphavantage.co/documentation/#technical-indicators) to the chart or enable users to draw support/resistance lines directly on the chart? We look forward to your creation! 
 
 
 **Food for thought #2: data freshness vs. website speed trade-off**
+
 In the `get_stock_data` function of `views.py`, we first search the local database for existing data of a given ticker before querying the Alpha Vantage APIs. In general, accessing data via local databases or in-memory caches is often faster (and computationally cheaper) than querying an online API. On the other hand, querying the Alpha Vantage API will guarantee you the latest data for a given ticker, while data in the local database is static in nature and will gradually become outdated over time. The trade-off (fresh data but lower website speed vs. stale data but faster website speed) is a common dilemma faced by developers of data-intensitve applications. Can you find a way out of this dilemma? For example, write a [cron job](https://en.wikipedia.org/wiki/Cron) to refresh the database on a daily basis so that the local data won't get outdated? Overall, database optimization is one ofthe most challenging yet rewarding tasks in the software development process. 
 
 
