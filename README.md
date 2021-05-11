@@ -454,7 +454,7 @@ With the above page layout and behavior in mind, let's implement the homepage fr
 </html>
 ```
 
-This is a chunky block of code! Don't worry - it basically completes the following 4 tasks: 
+This is a chunky block of code! Don't worry - we can break it down into the following 4 steps: 
 
 1. Load the Javascript dependencies: 
 -  `<script src="https://cdn.jsdelivr.net/npm/chart.js@3.2.1/dist/chart.min.js"></script>` loads the powerful [Chart.js library](https://www.chartjs.org/) for data visualization 
@@ -468,7 +468,7 @@ This is a chunky block of code! Don't worry - it basically completes the followi
 3. Define the behavior upon page loading
 
 The `$(document).ready(function(){...}` code block specifies the page behavior when it's first loaded:
-- First, it will make an AJAX POST request to a Django backend function called `get_stock_data` to get the price and simple moving average data for AAPL. AJAX stands for Asynchronous JavaScript And XML, which is a popular Javascript design pattern that enables you to (1) update a web page without reloading the page, (2) request data from a backend server - after the page has loaded, (3) receive data from a backend server - after the page has loaded, among other benefits. 
+- First, it will make an AJAX POST request to a Django backend function called `get_stock_data` to get the price and simple moving average data for AAPL. AJAX stands for Asynchronous JavaScript And XML, which is a popular Javascript design pattern that enables a developer to (1) update a web page without reloading the page, (2) request data from a backend server - after the page has loaded, (3) receive data from a backend server - after the page has loaded, among other benefits. 
 - Once AAPL's data is returned by the backend to the frontend (the data is stored in the `res` variable of `success: function (res, status) {...}`), it is parsed by several lines of Javascript codes into three lists: `dates`, `daily_adjusted_close`, and `sma_data`. 
 - The three lists above are then all truncated into a size of 500 elements (i.e., data for the trailing 500 trading days) to be visualized by Chart.js. Specifically, the values in `dates` are used for the X axis; values in `daily_adjusted_close` and `sma_data` are used for the Y axis. 
 
@@ -481,7 +481,7 @@ The `$('#submit-btn').click(function(){...}` code block specifies the page behav
 - The three lists above are then all truncated into a size of 500 elements (i.e., data for the trailing 500 trading days) to be visualized by Chart.js. Specifically, the values in `dates` are used for the X axis; values in `daily_adjusted_close` and `sma_data` are used for the Y axis. 
 
 
-You may be wondering where the `get_stock_data` backend function is. Please hold your breath - we will implement it right away! 
+As you can see, the `get_stock_data` backend function is now the only missing piece in the frontend-backend interactions. Please hold your breath - we will implement it right away! 
 
 ## Set up Django backend (views.py)
 
