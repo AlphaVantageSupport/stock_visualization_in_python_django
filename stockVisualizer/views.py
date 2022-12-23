@@ -21,7 +21,7 @@ def home(request):
 
 @csrf_exempt
 def get_stock_data(request):
-    if request.is_ajax():
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         ticker = request.POST.get('ticker', 'null')
         ticker = ticker.upper()
 
